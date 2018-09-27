@@ -1,3 +1,7 @@
+# This script, under the MIT license, came from https://github.com/iamtheyammer/powershell-scripts.
+# It requires GAM, from here: https://github.com/jay0lee/gam
+# Pretty self explanatory. Not perfect.
+
 Function Get-DeviceId {
     if(!$args[0]) {return "fail, not enough params. Get-DeviceId <serialNumber>."}
     return (gam.exe print cros query "id:$($args[0])" 2> $null).Split("\n")[1];
