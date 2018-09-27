@@ -1,20 +1,23 @@
-# This script, under the MIT license, came from https://github.com/iamtheyammer/powershell-scripts.
-# It requires GAM, from here: https://github.com/jay0lee/gam
-# Pretty self explanatory. Not perfect.
-
 Function Get-DeviceId {
     if(!$args[0]) {return "fail, not enough params. Get-DeviceId <serialNumber>."}
     return (gam.exe print cros query "id:$($args[0])" 2> $null).Split("\n")[1];
 }
 
-$deviceId = Read-Host "Update a Chrome OS device. Enter a serial number...";
+$deviceId = (Read-Host "Update a Chrome OS device. Enter a serial number...").Split(",");
+if($deviceId[1]) {
+    $option[0] = $deviceId[1];
+    $deviceId = $deviceId[0];
+}
 $deviceId = Get-DeviceId $deviceId;
 if(!$deviceId) {
     return "Could not find that device.";
 }
-"Found device. Select:";
-$option = (Read-Host "get in(f)o | set (l)ocation | set (a)sset id | change (u)ser | d(i)sable | (r)eenable | (c)hange ou | (d)eprovision | (n)ote | (g)et device id").Split(",");
-switch($option[0]) {
+if(-Not $option[0]) {
+    "Found device. Select:";
+    $option = (Read-Host "get in(f)o | set (l)ocation | set (a)sset id | change (u)ser | d(i)sable | (r)eenable | (c)hange ou | (d)eprovision | (n)ote | (g)et device id").Split(",");
+} 
+
+switch($option[0].ToLower()) {
     "f" {
         gam.exe info cros $deviceId full;
     }
@@ -24,7 +27,7 @@ switch($option[0]) {
         "Cool, done!"
     }
     "a" {
-        $newAssetId = Read-Host "What would you like the new location to be?";
+        $newAssetId = Read-Host "What would you like the new asset id to be?";
         $done = gam.exe update cros $deviceId assetid "$($newAssetId)";
         "Cool, done!"
     }
