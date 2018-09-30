@@ -12,7 +12,7 @@ $deviceId = Get-DeviceId $deviceId;
 if(!$deviceId) {
     return "Could not find that device.";
 }
-if(-Not $option[0]) {
+if(-Not $option) {
     "Found device. Select:";
     $option = (Read-Host "get in(f)o | set (l)ocation | set (a)sset id | change (u)ser | d(i)sable | (r)eenable | (c)hange ou | (d)eprovision | (n)ote | (g)et device id").Split(",");
 } 
